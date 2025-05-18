@@ -46,7 +46,7 @@
                                 <i class="fas fa-user"></i>
                                 <span>{{ __('Mon Profil') }}</span>
                             </a>
-                            <a href="#bookings" class="dropdown-item">
+                            <a href="{{ route('reservations.index') }}" class="dropdown-item">
                                 <i class="fas fa-calendar-check"></i>
                                 <span>Mes Réservations</span>
                             </a>
@@ -118,7 +118,7 @@
                 <i class="fas fa-user"></i>
                 <span>{{ __('Mon Profil') }}</span>
             </a>
-            <a href="#bookings" class="mobile-nav-link">
+            <a href="{{ route('reservations.index') }}" class="mobile-nav-link">
                 <i class="fas fa-calendar-check"></i>
                 <span>Mes Réservations</span>
             </a>

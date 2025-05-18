@@ -9,63 +9,125 @@ use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
-    public function create()
+    public function index()
     {
+        $reservations = Auth::user()->reservations()->with('salle')->latest()->get();
+        return view('reservations.index', compact('reservations'));
+    }
+
+    public function create(Request $request)
+    {
+        $salle = null;
+        if ($request->has('salle_id')) {
+            $salle = Salle::findOrFail($request->salle_id);
+        }
         $salles = Salle::all();
-        return view('reservations.create', compact('salles'));
+        return view('reservations.create', compact('salle', 'salles'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
-            'email' => 'required|email',
-            'telephone' => 'required|string',
-            'date_evenement' => 'required|date|after:today',
+            'salle_id' => 'required|exists:salles,id',
+            'date' => 'required|date|after:today',
             'heure_debut' => 'required',
             'heure_fin' => 'required|after:heure_debut',
-            'nombre_invites' => 'required|integer|min:1',
-            'type_evenement' => 'required|string',
-            'services' => 'nullable|array',
-            'commentaires' => 'nullable|string',
-            'salle_id' => 'required|exists:salles,id'
+            'services_supplementaires' => 'nullable|array',
+            'notes' => 'nullable|string|max:1000',
         ]);
 
-        if (Auth::check()) {
-            $validated['user_id'] = Auth::id();
-        }
+        $reservation = new Reservation();
+        $reservation->user_id = Auth::id();
+        $reservation->salle_id = $validated['salle_id'];
+        $reservation->date = $validated['date'];
+        $reservation->heure_debut = $validated['heure_debut'];
+        $reservation->heure_fin = $validated['heure_fin'];
+        $reservation->services_supplementaires = $request->services_supplementaires ?? [];
+        $reservation->notes = $validated['notes'];
+        $reservation->statut = 'en_attente';
+        $reservation->save();
 
-        $reservation = Reservation::create($validated);
-
-        return redirect()->route('reservations.show', $reservation->id)
+        return redirect()->route('reservations.show', $reservation)
             ->with('success', 'Votre demande de réservation a été envoyée avec succès !');
     }
 
-    public function index()
+    public function show(Reservation $reservation)
     {
-        $reservations = Reservation::where('user_id', auth()->id())
-            ->orderBy('created_at', 'desc')
-            ->get();
-        return view('reservations.index', compact('reservations'));
-    }
+        // Vérifier que l'utilisateur est bien le propriétaire de la réservation
+        if ($reservation->user_id !== Auth::id()) {
+            abort(403, 'Non autorisé');
+        }
 
-    public function show($id)
-    {
-        $reservation = Reservation::findOrFail($id);
         return view('reservations.show', compact('reservation'));
     }
 
-    public function cancel($id)
+    public function edit(Reservation $reservation)
     {
-        $reservation = Reservation::findOrFail($id);
+        $this->authorize('update', $reservation);
         
-        if ($reservation->user_id !== auth()->id()) {
-            abort(403);
+        if (!$reservation->isModifiable()) {
+            return back()->with('error', 'Cette réservation ne peut plus être modifiée.');
         }
 
-        $reservation->update(['status' => 'cancelled']);
-        return redirect()->route('reservations.index')
-            ->with('success', 'La réservation a été annulée.');
+        return view('reservations.edit', compact('reservation'));
+    }
+
+    public function update(Request $request, Reservation $reservation)
+    {
+        $this->authorize('update', $reservation);
+
+        if (!$reservation->isModifiable()) {
+            return back()->with('error', 'Cette réservation ne peut plus être modifiée.');
+        }
+
+        $validated = $request->validate([
+            'date' => 'required|date|after:today',
+            'heure_debut' => 'required',
+            'heure_fin' => 'required|after:heure_debut',
+        ]);
+
+        $reservation->update($validated);
+
+        return redirect()->route('reservations.show', $reservation)
+            ->with('success', 'Réservation modifiée avec succès.');
+    }
+
+    public function cancel(Reservation $reservation)
+    {
+        // Vérifier que l'utilisateur est bien le propriétaire de la réservation
+        if ($reservation->user_id !== Auth::id()) {
+            abort(403, 'Non autorisé');
+        }
+
+        // Vérifier que la réservation peut être annulée
+        if (!$reservation->isCancellable()) {
+            return back()->with('error', 'Cette réservation ne peut plus être annulée.');
+        }
+
+        $reservation->statut = 'annulee';
+        $reservation->save();
+
+        return back()->with('success', 'La réservation a été annulée avec succès.');
+    }
+
+    public function review(Request $request, Reservation $reservation)
+    {
+        $this->authorize('review', $reservation);
+
+        if (!$reservation->canLeaveReview()) {
+            return back()->with('error', 'Vous ne pouvez pas encore laisser un avis pour cette réservation.');
+        }
+
+        $validated = $request->validate([
+            'rating' => 'required|integer|between:1,5',
+            'comment' => 'required|string|max:500',
+        ]);
+
+        // Créer l'avis (à implémenter avec un modèle Review)
+        // $reservation->reviews()->create($validated);
+
+        return redirect()->route('reservations.show', $reservation)
+            ->with('success', 'Merci pour votre avis !');
     }
 }
 

@@ -1,119 +1,181 @@
 @extends('layouts.client')
 
-@section('title', 'Mes réservations')
+@section('title', 'Vos Réservations')
 
 @section('content')
-<div class="container py-5">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">Mes réservations</h2>
-            <a href="{{ route('reservations.create') }}" class="btn btn-light">
-                <i class="fas fa-plus me-2"></i>Nouvelle réservation
-            </a>
-        </div>
-        <div class="card-body">
-            @if(session('success'))
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                </div>
-            @endif
+<div class="container my-5">
+    <h1 class="mb-4">Vos Réservations</h1>
 
-            @if($reservations->isEmpty())
-                <div class="text-center py-5">
-                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                    <p class="lead mb-0">Aucune réservation trouvée.</p>
-                    <p class="text-muted">Commencez par réserver une salle pour votre événement.</p>
-                </div>
-            @else
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Salle</th>
-                                <th>Type d'événement</th>
-                                <th>Date</th>
-                                <th>Horaires</th>
-                                <th>Invités</th>
-                                <th>Statut</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($reservations as $reservation)
-                                <tr>
-                                    <td>{{ $reservation->salle->nom }}</td>
-                                    <td>{{ ucfirst($reservation->type_evenement) }}</td>
-                                    <td>{{ $reservation->date_evenement->format('d/m/Y') }}</td>
-                                    <td>{{ $reservation->heure_debut }} - {{ $reservation->heure_fin }}</td>
-                                    <td>{{ $reservation->nombre_invites }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ $reservation->status === 'pending' ? 'warning' : ($reservation->status === 'confirmed' ? 'success' : 'danger') }}">
-                                            {{ $reservation->status === 'pending' ? 'En attente' : ($reservation->status === 'confirmed' ? 'Confirmée' : 'Annulée') }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a href="{{ route('reservations.show', $reservation->id) }}" class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye me-1"></i>Détails
-                                            </a>
-                                            @if($reservation->status === 'pending')
-                                                <form method="POST" action="{{ route('reservations.cancel', $reservation->id) }}" class="d-inline">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')">
-                                                        <i class="fas fa-times me-1"></i>Annuler
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @endif
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
         </div>
-    </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if($reservations->isEmpty())
+        <div class="alert alert-info">
+            Vous n'avez pas encore de réservations.
+        </div>
+    @else
+        <div class="row">
+            @foreach($reservations as $reservation)
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">{{ $reservation->salle->nom }}</h5>
+                            <span class="badge {{ $reservation->statut === 'confirmee' ? 'bg-success' : ($reservation->statut === 'en_attente' ? 'bg-warning' : ($reservation->statut === 'annulee' ? 'bg-danger' : 'bg-secondary')) }}">
+                                {{ ucfirst($reservation->statut) }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="fas fa-calendar me-2"></i>
+                                {{ $reservation->date->format('d/m/Y') }}
+                            </div>
+                            <div class="mb-3">
+                                <i class="fas fa-clock me-2"></i>
+                                {{ $reservation->heure_debut->format('H:i') }} - {{ $reservation->heure_fin->format('H:i') }}
+                            </div>
+                            <div class="mb-3">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                {{ $reservation->salle->ville }} - {{ $reservation->salle->adresse }}
+                            </div>
+                            <div class="mb-3">
+                                <i class="fas fa-money-bill-wave me-2"></i>
+                                {{ number_format($reservation->prix_total, 2, ',', ' ') }} MAD
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{{ route('reservations.show', $reservation) }}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-2"></i>Voir détails
+                                </a>
+
+                                @if($reservation->isModifiable())
+                                    <a href="{{ route('reservations.edit', $reservation) }}" class="btn btn-warning">
+                                        <i class="fas fa-edit me-2"></i>Modifier
+                                    </a>
+                                @endif
+
+                                @if($reservation->isCancellable())
+                                    <button type="button" class="btn btn-danger" 
+                                            onclick="confirmCancel('{{ route('reservations.cancel', $reservation) }}')">
+                                        <i class="fas fa-times me-2"></i>Annuler
+                                    </button>
+                                @endif
+
+                                @if($reservation->canLeaveReview())
+                                    <button type="button" class="btn btn-success" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#reviewModal{{ $reservation->id }}">
+                                        <i class="fas fa-star me-2"></i>Avis
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if($reservation->canLeaveReview())
+                    <div class="modal fade" id="reviewModal{{ $reservation->id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Donner votre avis</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form action="{{ route('reservations.review', $reservation) }}" method="POST">
+                                    @csrf
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Note</label>
+                                            <div class="rating">
+                                                @for($i = 5; $i >= 1; $i--)
+                                                    <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}{{ $reservation->id }}">
+                                                    <label for="star{{ $i }}{{ $reservation->id }}">☆</label>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Commentaire</label>
+                                            <textarea class="form-control" name="comment" rows="3" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endforeach
+        </div>
+    @endif
 </div>
 
 <style>
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    font-size: 30px;
+    color: #ddd;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked ~ label {
+    color: #c8b53e;
+}
+
 .card {
+    transition: transform 0.2s;
     border: none;
     border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
 }
 
 .card-header {
-    border-radius: 15px 15px 0 0 !important;
-    padding: 1.5rem;
-}
-
-.table {
-    margin-bottom: 0;
-}
-
-.table th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.5px;
-}
-
-.table td {
-    vertical-align: middle;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 1rem;
 }
 
 .badge {
-    padding: 0.5rem 0.8rem;
-    font-weight: 500;
-}
-
-.btn-group .btn {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-}
-
-.btn-group .btn + form {
-    margin-left: 0.25rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
 }
 </style>
+
+@push('scripts')
+<script>
+function confirmCancel(url) {
+    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+        window.location.href = url;
+    }
+}
+</script>
+@endpush
+
 @endsection

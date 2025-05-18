@@ -190,11 +190,10 @@ footer a:hover {
         <li>
             <a href="#">Prestataire</a>
             <div class="dropdown-content">
-                <a href="{{ route('prestataires', ['type' => 'Traiteur']) }}">Traiteur</a>
-                <a href="{{ route('prestataires', ['type' => 'Décorateur']) }}">Décorateur</a>
-                <a href="{{ route('prestataires', ['type' => 'Photographe']) }}">Photographe</a>
-                <a href="{{ route('prestataires', ['type' => 'Animateur']) }}">Animateur</a>
-                <a href="{{ route('prestataires', ['type' => 'Autre']) }}">Autre</a>
+                <a href="{{ route('prestataires.traiteurs') }}">Traiteur</a>
+<a href="{{ route('prestataires.decorateurs') }}">Décorateur</a>
+<a href="{{ route('prestataires.photographes') }}">Photographe</a>
+<a href="{{ route('prestataires.animateurs') }}">Animateur</a>
             </div>
         </li>
         <li><a href="{{ route('reservations.index') }}">Vos Réservations</a></li>
@@ -258,10 +257,10 @@ footer a:hover {
             <div class="footer-section">
                 <h3>Nos Services</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ route('prestataires', ['type' => 'Traiteur']) }}">Traiteur</a></li>
-                    <li><a href="{{ route('prestataires', ['type' => 'Décorateur']) }}">Décoration</a></li>
-                    <li><a href="{{ route('prestataires', ['type' => 'Photographe']) }}">Photographie</a></li>
-                    <li><a href="{{ route('prestataires', ['type' => 'Animateur']) }}">Animation</a></li>
+                    <li><a href="{{ route('prestataires.traiteurs') }}">Traiteur</a></li>
+<li><a href="{{ route('prestataires.decorateurs') }}">Décoration</a></li>
+<li><a href="{{ route('prestataires.photographes') }}">Photographie</a></li>
+<li><a href="{{ route('prestataires.animateurs') }}">Animation</a></li>
                     <li><a href="{{ route('reservations.index') }}">Réservations</a></li>
                 </ul>
             </div>
@@ -465,7 +464,7 @@ footer a:hover {
 
     /* Nouveau style pour le footer avec nouvelle palette de couleurs */
     .new-footer {
-        background: #000000;
+        background: linear-gradient(135deg, #1a1a1a, #2d3436);
         color: #ffffff;
         padding: 4rem 0 0 0;
         margin-top: 3rem;
@@ -473,27 +472,31 @@ footer a:hover {
     }
 
     .footer-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 3rem;
-        padding: 0 2rem;
-    }
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0 2rem;
+}
 
-    .footer-section {
-        margin-bottom: 2rem;
-    }
+.footer-section {
+    flex: 1 1 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* ✅ contenu vertical */
+    margin-bottom: 2rem;
+}
 
-    .footer-section h3 {
-        color: #d4c17a;
-        font-size: 1.3rem;
-        margin-bottom: 1.5rem;
-        position: relative;
-        padding-bottom: 0.8rem;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
+
+   .footer-section h3 {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
 
     .footer-section h3::after {
         content: '';
@@ -502,35 +505,61 @@ footer a:hover {
         bottom: 0;
         width: 40px;
         height: 3px;
-        background: #d4c17a;
+        background: linear-gradient(90deg, #c8b53e, #8e7c1c);
         border-radius: 2px;
     }
 
     .footer-description {
         line-height: 1.8;
         margin-bottom: 1.5rem;
-        color: #ffffff;
+        color: #a0a0a0;
         font-size: 0.95rem;
+    }
+
+    .footer-links {
+    display: flex;
+    flex-direction: column; /* ✅ chaque lien sous l’autre */
+    gap: 0.6rem;
+    padding: 0;
+    margin: 0;
+}
+
+
+    .social-links a {
+        background: linear-gradient(135deg, #2d3436, #3d4548);
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #c8b53e;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .social-links a:hover {
+        transform: translateY(-3px) scale(1.05);
+        background: linear-gradient(135deg, #c8b53e, #8e7c1c);
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(200, 181, 62, 0.3);
     }
 
     .footer-links {
         list-style: none;
         padding: 0;
         margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
     }
 
     .footer-links li {
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     .footer-links a {
-        color: #ffffff;
+        color: #a0a0a0;
         text-decoration: none;
         transition: all 0.3s ease;
-        display: block;
+        display: inline-block;
         position: relative;
         padding-left: 1.2rem;
     }
@@ -539,44 +568,55 @@ footer a:hover {
         content: '→';
         position: absolute;
         left: 0;
-        color: #d4c17a;
+        color: #c8b53e;
         transition: transform 0.3s ease;
     }
 
     .footer-links a:hover {
-        color: #d4c17a;
+        color: #ffffff;
         transform: translateX(5px);
+    }
+
+    .footer-links a:hover::before {
+        transform: translateX(3px);
     }
 
     .contact-info {
         list-style: none;
         padding: 0;
         margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
     }
 
     .contact-info li {
         display: flex;
         align-items: center;
         gap: 1rem;
-        margin-bottom: 0.5rem;
-        color: #ffffff;
+        margin-bottom: 1.2rem;
+        color: #a0a0a0;
         transition: all 0.3s ease;
     }
 
+    .contact-info li:hover {
+        color: #ffffff;
+        transform: translateX(5px);
+    }
+
     .contact-info i {
-        color: #d4c17a;
+        color: #c8b53e;
         font-size: 1.2rem;
         width: 20px;
         transition: all 0.3s ease;
     }
 
+    .contact-info li:hover i {
+        transform: scale(1.1);
+    }
+
     .footer-bottom {
-        background-color: #111111;
+        background-color: rgba(0, 0, 0, 0.3);
         padding: 1.5rem 0;
         margin-top: 3rem;
+        backdrop-filter: blur(10px);
     }
 
     .footer-bottom-content {
@@ -592,7 +632,7 @@ footer a:hover {
 
     .footer-bottom p {
         margin: 0;
-        color: #ffffff;
+        color: #a0a0a0;
         font-size: 0.9rem;
     }
 
@@ -603,14 +643,30 @@ footer a:hover {
     }
 
     .legal-links a {
-        color: #ffffff;
+        color: #a0a0a0;
         text-decoration: none;
         transition: all 0.3s ease;
         font-size: 0.9rem;
+        position: relative;
     }
 
     .legal-links a:hover {
-        color: #d4c17a;
+        color: #c8b53e;
+    }
+
+    .legal-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background-color: #c8b53e;
+        transition: width 0.3s ease;
+    }
+
+    .legal-links a:hover::after {
+        width: 100%;
     }
 
     .separator {

@@ -68,7 +68,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                                <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -108,7 +113,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                        <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -148,7 +158,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                     <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -188,7 +203,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                         <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -231,7 +251,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+              <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -271,7 +296,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                             <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -311,7 +341,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                           <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -351,7 +386,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                   <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -391,7 +431,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                                <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -434,7 +479,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                           <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -474,7 +524,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                    <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -514,7 +569,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                        <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -557,7 +617,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                          <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -597,7 +662,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                          <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -637,7 +707,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+              <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -677,7 +752,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                         <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>
@@ -717,7 +797,12 @@
                             </div>
                             <div class="d-flex gap-2 mt-3">
                                 <button class="btn btn-outline-primary flex-grow-1">Voir les détails</button>
-                                <a href="{{ route('reservations.create') }}" class="btn btn-primary flex-grow-1">
+                              <a href="{{ route('reservations.create') }}"
+   class="btn btn-primary flex-grow-1"
+   style="color: black;">
+   Réserver
+</a>
+
                                     <i class="fas fa-calendar-plus me-2"></i>Réserver
                                 </a>
                             </div>

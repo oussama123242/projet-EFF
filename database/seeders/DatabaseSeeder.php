@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
 {
     $this->call([
         SalleVilleSeeder::class,
+        PhotographeSeeder::class,
     ]);
 }
 

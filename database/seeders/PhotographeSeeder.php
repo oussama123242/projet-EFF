@@ -1,49 +1,35 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Database\Seeders;
 
-use Illuminate\Http\Request;
+use Illuminate\Database\Seeder;
+use App\Models\Photographe;
 
-class PrestataireController extends Controller
+class PhotographeSeeder extends Seeder
 {
-    public function index()
+    public function run()
     {
-        return view('prestataires.index');
-    }
-
-    public function traiteurs()
-    {
-        return view('prestataires.traiteurs');
-    }
-
-    public function decorateurs()
-    {
-        return view('prestataires.decorateurs');
-    }
-
-    public function photographes(Request $request)
-    {
-        $photographes = collect([
+        $photographes = [
             [
                 'nom' => 'Studio Art',
                 'style' => 'artistique',
                 'description' => 'Photographie Artistique & Reportage',
                 'prix_base' => 8000,
-                'rating' => 5,
+                'rating' => 5.0,
                 'nombre_avis' => 92,
                 'badge' => 'Premium',
-                'services' => [
+                'services' => json_encode([
                     'Photos haute résolution',
                     'Album photo premium',
                     'Vidéo drone',
                     'Montage professionnel'
-                ],
-                'images_gallery' => [
+                ]),
+                'images_gallery' => json_encode([
                     'studio-art1.jpg',
                     'studio-art2.jpg',
                     'studio-art3.jpg',
                     'studio-art4.jpg'
-                ]
+                ])
             ],
             [
                 'nom' => 'Capture Moments',
@@ -53,18 +39,18 @@ class PrestataireController extends Controller
                 'rating' => 4.5,
                 'nombre_avis' => 78,
                 'badge' => 'Populaire',
-                'services' => [
+                'services' => json_encode([
                     'Reportage complet',
                     'Album photo digital',
                     'Séance couple',
                     'Retouches professionnelles'
-                ],
-                'images_gallery' => [
+                ]),
+                'images_gallery' => json_encode([
                     'capture1.jpg',
                     'capture2.jpg',
                     'capture3.jpg',
                     'capture4.jpg'
-                ]
+                ])
             ],
             [
                 'nom' => 'Tradition Photos',
@@ -74,18 +60,18 @@ class PrestataireController extends Controller
                 'rating' => 4.8,
                 'nombre_avis' => 156,
                 'badge' => 'Expert',
-                'services' => [
+                'services' => json_encode([
                     'Photos traditionnelles',
                     'Album familial',
                     'Tirages papier',
                     'Cadres classiques'
-                ],
-                'images_gallery' => [
+                ]),
+                'images_gallery' => json_encode([
                     'tradition1.jpg',
                     'tradition2.jpg',
                     'tradition3.jpg',
                     'tradition4.jpg'
-                ]
+                ])
             ],
             [
                 'nom' => 'Modern Vision',
@@ -95,49 +81,23 @@ class PrestataireController extends Controller
                 'rating' => 4.9,
                 'nombre_avis' => 84,
                 'badge' => 'Innovant',
-                'services' => [
+                'services' => json_encode([
                     'Photos conceptuelles',
                     'Album design moderne',
                     'Effets spéciaux',
                     'Galerie en ligne'
-                ],
-                'images_gallery' => [
+                ]),
+                'images_gallery' => json_encode([
                     'modern1.jpg',
                     'modern2.jpg',
                     'modern3.jpg',
                     'modern4.jpg'
-                ]
+                ])
             ]
-        ]);
+        ];
 
-        // Filtrer par style si spécifié
-        if ($request->has('style') && !empty($request->style)) {
-            $photographes = $photographes->where('style', $request->style);
+        foreach ($photographes as $photographe) {
+            Photographe::create($photographe);
         }
-
-        // Filtrer par budget si spécifié
-        if ($request->has('budget') && !empty($request->budget)) {
-            switch ($request->budget) {
-                case 'economique':
-                    $photographes = $photographes->whereBetween('prix_base', [3000, 5000]);
-                    break;
-                case 'standard':
-                    $photographes = $photographes->whereBetween('prix_base', [5000, 8000]);
-                    break;
-                case 'premium':
-                    $photographes = $photographes->whereBetween('prix_base', [8000, 12000]);
-                    break;
-                case 'luxe':
-                    $photographes = $photographes->where('prix_base', '>', 12000);
-                    break;
-            }
-        }
-
-        return view('prestataires.photographes', ['photographes' => $photographes]);
     }
-
-    public function animateurs()
-    {
-        return view('prestataires.animateurs');
-    }
-}
+} 

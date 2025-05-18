@@ -9,37 +9,46 @@ class Reservation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'salle_id',
         'user_id',
-        'nom',
-        'email',
-        'telephone',
-        'date_evenement',
+        'salle_id',
+        'date',
         'heure_debut',
         'heure_fin',
-        'nombre_invites',
-        'type_evenement',
-        'services',
-        'commentaires',
-        'status'
+        'statut',
+        'prix_total',
+        'services_supplementaires',
+        'notes'
     ];
 
     protected $casts = [
-        'date_evenement' => 'datetime',
-        'services' => 'array',
+        'date' => 'date',
+        'heure_debut' => 'datetime',
+        'heure_fin' => 'datetime',
+        'services_supplementaires' => 'array',
     ];
 
-    protected $attributes = [
-        'status' => 'pending'
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function salle()
     {
         return $this->belongsTo(Salle::class);
     }
 
-    public function user()
+    public function isModifiable()
     {
-        return $this->belongsTo(User::class);
+        return $this->statut === 'en_attente';
+    }
+
+    public function isCancellable()
+    {
+        return in_array($this->statut, ['en_attente', 'confirmee']);
+    }
+
+    public function canLeaveReview()
+    {
+        return $this->statut === 'terminee';
     }
 }
