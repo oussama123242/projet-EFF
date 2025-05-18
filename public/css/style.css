@@ -1,0 +1,237 @@
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #121212;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.hero-section, .about-section, .services-section, .reviews-section, .contact-section {
+    margin: 2rem auto;
+    padding: 2.5rem;
+    border-radius: 15px;
+    max-width: 90%;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-section:hover, .about-section:hover, .services-section:hover, .reviews-section:hover, .contact-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Thème Noir et Doré */
+:root {
+    --main-bg-color: #121212;
+    --accent-color: #FFD700;
+    --text-color: #ffffff;
+}
+
+/* Style commun */
+section {
+    background-color: var(--main-bg-color);
+    color: var(--text-color);
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+h2, h3 {
+    color: var(--accent-color);
+}
+
+a, a:visited {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: #fff;
+}
+
+button, .btn {
+    background-color: var(--accent-color);
+    color: var(--main-bg-color);
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover, .btn:hover {
+    background-color: #e0c700;
+}
+
+/* Hero Section */
+.hero-section {
+    background: white;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #0a0a0a;
+    
+}
+
+.hero-subtitle, .hero-description {
+    font-size: 1.5rem;
+    color: #0a0a0a;
+}
+
+.hero-btn {
+    margin-top: 1rem;
+}
+
+.hero-image {
+    margin: 0 auto;
+    max-width: 300px;
+}
+
+.hero-image img {
+    width: 100%;
+    border-radius: 50%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+/* About Section */
+.about-section {
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+}
+
+.about-title {
+    font-size: 2.5rem;
+}
+
+.about-description {
+    font-size: 1.2rem;
+}
+
+.about-btn {
+    margin-top: 1rem;
+}
+
+/* Services Section */
+.services-section {
+    background-color: #1a1a1a;
+}
+
+.services-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.services-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.service-card {
+    background-color: #2d2d2d;
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 280px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+    transform: scale(1.05);
+}
+
+.service-type {
+    font-size: 1.4rem;
+    margin: 0.5rem 0;
+}
+
+.service-price {
+    margin: 0.5rem 0;
+}
+
+.service-link {
+    margin-top: 1rem;
+    background-color: var(--accent-color);
+    color: var(--main-bg-color);
+}
+
+/* Reviews Section */
+.reviews-section {
+    background-color: #1a1a1a;
+}
+
+.reviews-title {
+    font-size: 2rem;
+}
+
+.reviews-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+}
+
+.review-card {
+    background-color: #2d2d2d;
+    border: 1px solid var(--accent-color);
+    border-radius: 10px;
+    padding: 1.5rem;
+    width: 300px;
+    text-align: left;
+}
+
+.review-author {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.review-text {
+    font-style: italic;
+    margin: 0.5rem 0;
+}
+
+.review-stars {
+    color: var(--accent-color);
+}
+
+/* Contact Section */
+.contact-section {
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+}
+
+.contact-title {
+    font-size: 2.5rem;
+}
+
+.contact-text {
+    font-size: 1.2rem;
+}
+
+.contact-info p {
+    margin: 0.3rem 0;
+}
+
+.contact-btn {
+    margin-top: 1rem;
+}
+
+/* Footer */
+footer {
+    background-color: var(--main-bg-color);
+    color: var(--accent-color);
+    padding: 1rem;
+    text-align: center;
+}
+
+footer a {
+    color: var(--accent-color);
+}
+
+footer a:hover {
+    color: #fff;
+}
