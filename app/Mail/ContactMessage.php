@@ -10,7 +10,7 @@ class ContactMessage extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $data;
+    protected $data;
 
     /**
      * Create a new message instance.
@@ -34,7 +34,7 @@ class ContactMessage extends Mailable
                     ->with([
                         'nom' => $this->data['nom'],
                         'email' => $this->data['email'],
-                        'message' => $this->data['message']
+                        'messageContent' => (string) $this->data['message']
                     ]);
     }
 }

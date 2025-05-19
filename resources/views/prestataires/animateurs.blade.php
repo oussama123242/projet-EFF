@@ -6,33 +6,33 @@
 <div class="animateurs-container">
     <!-- Hero Section -->
     <div class="hero-section text-center mb-5">
-        <h1 class="display-4 fw-bold" style="color: #2d3436 ;text-align: center;">Nos Animateurs</h1>
+        <h1 class="display-4 fw-bold" style="color: #2d3436;text-align: center;">Nos Animateurs</h1>
         <p class="lead" style="color: #2d3436;text-align: center;">Donnez vie à votre événement avec nos animateurs professionnels</p>
     </div>
 
     <!-- Filtres -->
-    <div class="filters-section mb-5" style="text-align: center; ">
+    <div class="filters-section mb-5" style="text-align: center;">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <form method="GET" class="row g-3">
                             <div class="col-md-4">
-                                <select name="type" class="form-select">
+                                <select name="style" class="form-select">
                                     <option value="">Type d'animation</option>
-                                    <option value="dj">DJ & Musique</option>
-                                    <option value="spectacle">Spectacle</option>
-                                    <option value="enfants">Animation enfants</option>
-                                    <option value="traditionnel">Animation traditionnelle</option>
+                                    <option value="general" {{ request('style') == 'general' ? 'selected' : '' }}>Animation générale</option>
+                                    <option value="magie" {{ request('style') == 'magie' ? 'selected' : '' }}>Magie & Spectacle</option>
+                                    <option value="traditionnel" {{ request('style') == 'traditionnel' ? 'selected' : '' }}>Traditionnel</option>
+                                    <option value="enfants" {{ request('style') == 'enfants' ? 'selected' : '' }}>Animation enfants</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <select name="budget" class="form-select">
                                     <option value="">Budget</option>
-                                    <option value="economique">2000-4000 MAD</option>
-                                    <option value="standard">4000-7000 MAD</option>
-                                    <option value="premium">7000-10000 MAD</option>
-                                    <option value="luxe">10000+ MAD</option>
+                                    <option value="economique" {{ request('budget') == 'economique' ? 'selected' : '' }}>4 500 - 6 000 MAD</option>
+                                    <option value="standard" {{ request('budget') == 'standard' ? 'selected' : '' }}>6 000 - 8 000 MAD</option>
+                                    <option value="premium" {{ request('budget') == 'premium' ? 'selected' : '' }}>8 000 - 12 000 MAD</option>
+                                    <option value="luxe" {{ request('budget') == 'luxe' ? 'selected' : '' }}>12 000+ MAD</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -49,114 +49,74 @@
 
     <!-- Liste des Animateurs -->
     <div class="animateurs-grid">
-        <!-- Animateur 1 -->
+        @forelse($animateurs as $animateur)
         <div class="animateur-card">
             <div class="animateur-image">
-                <img src="{{ asset('images/animateurs/dj-pro.jpg') }}" alt="DJ Pro Events">
-                <div class="animateur-badge">Premium</div>
+                <img src="{{ asset('images/animateurs/' . ($animateur['images_gallery'][0] ?? 'default-animateur.jpg')) }}" 
+                     alt="{{ $animateur['nom'] }}"
+                     onerror="this.src='{{ asset('images/default-animateur.jpg') }}'">
+                <div class="animateur-badge">{{ $animateur['badge'] }}</div>
             </div>
             <div class="animateur-details">
-                <h3>DJ Pro Events</h3>
-                <p class="specialite">DJ & Animation Professionnelle</p>
+                <h3>{{ $animateur['nom'] }}</h3>
+                <p class="specialite">{{ $animateur['description'] }}</p>
                 <div class="rating mb-3">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <span class="rating-count">(105 avis)</span>
+                    @for($i = 1; $i <= 5; $i++)
+                        @if($i <= floor($animateur['rating']))
+                            <i class="fas fa-star"></i>
+                        @elseif($i - 0.5 <= $animateur['rating'])
+                            <i class="fas fa-star-half-alt"></i>
+                        @else
+                            <i class="far fa-star"></i>
+                        @endif
+                    @endfor
+                    <span class="rating-count">({{ $animateur['nombre_avis'] }} avis)</span>
                 </div>
-                <div class="equipment-list mb-3">
-                    <span class="equipment-tag">Sonorisation pro</span>
-                    <span class="equipment-tag">Éclairage LED</span>
-                    <span class="equipment-tag">Machine à fumée</span>
-                    <span class="equipment-tag">Karaoké</span>
+                <div class="gallery-preview mb-3">
+                    @if(isset($animateur['images_gallery']) && count($animateur['images_gallery']) > 0)
+                        @foreach(array_slice($animateur['images_gallery'], 0, 4) as $image)
+                            <div class="gallery-item">
+                                <img src="{{ asset('images/animateurs/' . $image) }}" 
+                                     alt="Photo {{ $loop->iteration }}"
+                                     onerror="this.src='{{ asset('images/default-animateur.jpg') }}'">
+                            </div>
+                        @endforeach
+                    @else
+                        @for($i = 0; $i < 4; $i++)
+                            <div class="gallery-item">
+                                <img src="{{ asset('images/default-animateur.jpg') }}" alt="Image par défaut">
+                            </div>
+                        @endfor
+                    @endif
                 </div>
                 <ul class="services-list">
-                    <li><i class="fas fa-check me-2"></i>Tous styles de musique</li>
-                    <li><i class="fas fa-check me-2"></i>Animation micro</li>
-                    <li><i class="fas fa-check me-2"></i>Jeux et concours</li>
-                    <li><i class="fas fa-check me-2"></i>Équipement haut de gamme</li>
+                    @foreach($animateur['services'] as $service)
+                    <li><i class="fas fa-check me-2"></i>{{ $service }}</li>
+                    @endforeach
                 </ul>
-                <div class="video-preview">
-                    <video poster="{{ asset('images/animateurs/dj-preview.jpg') }}" class="w-100 rounded">
-                        <source src="{{ asset('videos/dj-demo.mp4') }}" type="video/mp4">
-                    </video>
-                    <button class="play-btn">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
                 <div class="price-range mb-3">
                     <i class="fas fa-tag me-2"></i>
-                    <span>À partir de 7000 MAD</span>
+                    <span>À partir de {{ number_format($animateur['prix_base'], 0, ',', ' ') }} MAD</span>
                 </div>
                 <div class="d-grid gap-2">
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#demoModal1">
-                        <i class="fas fa-play-circle me-2"></i>Voir la démo
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#galleryModal{{ $loop->index }}">
+                        <i class="fas fa-images me-2"></i>Voir la galerie
                     </button>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#devisModal1">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#devisModal{{ $loop->index }}">
                         <i class="fas fa-file-invoice me-2"></i>Demander un devis
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- Animateur 2 -->
-        <div class="animateur-card">
-            <div class="animateur-image">
-                <img src="{{ asset('images/animateurs/fun-kids.jpg') }}" alt="Fun Kids">
-                <div class="animateur-badge">Spécial Enfants</div>
-            </div>
-            <div class="animateur-details">
-                <h3>Fun Kids</h3>
-                <p class="specialite">Animation Enfants & Spectacles</p>
-                <div class="rating mb-3">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span class="rating-count">(87 avis)</span>
-                </div>
-                <div class="equipment-list mb-3">
-                    <span class="equipment-tag">Maquillage</span>
-                    <span class="equipment-tag">Jeux gonflables</span>
-                    <span class="equipment-tag">Mascottes</span>
-                    <span class="equipment-tag">Magie</span>
-                </div>
-                <ul class="services-list">
-                    <li><i class="fas fa-check me-2"></i>Animations ludiques</li>
-                    <li><i class="fas fa-check me-2"></i>Spectacles interactifs</li>
-                    <li><i class="fas fa-check me-2"></i>Ateliers créatifs</li>
-                    <li><i class="fas fa-check me-2"></i>Encadrement professionnel</li>
-                </ul>
-                <div class="video-preview">
-                    <video poster="{{ asset('images/animateurs/kids-preview.jpg') }}" class="w-100 rounded">
-                        <source src="{{ asset('videos/kids-demo.mp4') }}" type="video/mp4">
-                    </video>
-                    <button class="play-btn">
-                        <i class="fas fa-play"></i>
-                    </button>
-                </div>
-                <div class="price-range mb-3">
-                    <i class="fas fa-tag me-2"></i>
-                    <span>À partir de 4000 MAD</span>
-                </div>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#demoModal2">
-                        <i class="fas fa-play-circle me-2"></i>Voir la démo
-                    </button>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#devisModal2">
-                        <i class="fas fa-file-invoice me-2"></i>Demander un devis
-                    </button>
-                </div>
-            </div>
+        @empty
+        <div class="col-12 text-center">
+            <p class="lead">Aucun animateur ne correspond à vos critères de recherche.</p>
         </div>
+        @endforelse
     </div>
 </div>
 
 <style>
-    
 .animateurs-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -174,9 +134,10 @@
 
 .animateurs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
     margin-top: 2rem;
+    justify-content: center;
 }
 
 .animateur-card {
@@ -185,6 +146,9 @@
     overflow: hidden;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .animateur-card:hover {
@@ -194,12 +158,14 @@
 .animateur-image {
     position: relative;
     height: 250px;
+    background-color: #f8f9fa;
 }
 
 .animateur-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background-color: #f8f9fa;
 }
 
 .animateur-badge {
@@ -211,72 +177,79 @@
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-weight: 600;
+    z-index: 1;
 }
 
 .animateur-details {
     padding: 1.5rem;
-}
-
-.equipment-list {
+    flex-grow: 1;
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-direction: column;
 }
 
-.equipment-tag {
-    background: #f5f6fa;
+.animateur-details h3 {
+    margin-bottom: 0.5rem;
     color: #2d3436;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.85rem;
+    font-size: 1.4rem;
 }
 
-.video-preview {
-    position: relative;
+.specialite {
+    color: #636e72;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.gallery-preview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
     margin: 1rem 0;
+}
+
+.gallery-item {
+    aspect-ratio: 1;
     border-radius: 0.5rem;
     overflow: hidden;
+    background-color: #f8f9fa;
 }
 
-.play-btn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    background: rgba(200, 181, 62, 0.9);
-    border: none;
-    border-radius: 50%;
-    color: white;
-    font-size: 1.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    background-color: #f8f9fa;
 }
 
-.play-btn:hover {
-    background: rgba(200, 181, 62, 1);
-    transform: translate(-50%, -50%) scale(1.1);
+.gallery-item:hover img {
+    transform: scale(1.1);
 }
 
 .services-list {
     list-style: none;
     padding: 0;
     margin: 1rem 0;
+    flex-grow: 1;
 }
 
 .services-list li {
     margin-bottom: 0.5rem;
     color: #2d3436;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
 }
 
 .services-list li i {
     color: #c8b53e;
+    margin-right: 0.5rem;
 }
 
 .rating {
     color: #c8b53e;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .rating-count {
@@ -288,11 +261,13 @@
 .price-range {
     color: #2d3436;
     font-weight: 500;
+    margin-top: auto;
 }
 
 .btn-primary {
     background-color: #c8b53e;
     border: none;
+    padding: 0.75rem;
 }
 
 .btn-primary:hover {
@@ -302,11 +277,23 @@
 .btn-outline-primary {
     border-color: #c8b53e;
     color: #c8b53e;
+    padding: 0.75rem;
 }
 
 .btn-outline-primary:hover {
     background-color: #c8b53e;
     color: white;
+}
+
+.d-grid {
+    margin-top: auto;
+}
+
+@media (max-width: 1200px) {
+    .animateurs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -320,6 +307,11 @@
 
     .animateurs-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .gallery-preview {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 </style>

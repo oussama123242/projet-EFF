@@ -52,7 +52,9 @@
         @forelse($photographes as $photographe)
         <div class="photographe-card">
             <div class="photographe-image">
-                <img src="{{ asset('images/photographes/' . ($photographe['images_gallery'][0] ?? 'default.jpg')) }}" alt="{{ $photographe['nom'] }}">
+                <img src="{{ asset('images/photographes/' . ($photographe['images_gallery'][0] ?? 'default-photographe.jpg')) }}" 
+                     alt="{{ $photographe['nom'] }}"
+                     onerror="this.src='{{ asset('images/default-photographe.jpg') }}'">
                 <div class="photographe-badge">{{ $photographe['badge'] }}</div>
             </div>
             <div class="photographe-details">
@@ -71,12 +73,21 @@
                     <span class="rating-count">({{ $photographe['nombre_avis'] }} avis)</span>
                 </div>
                 <div class="gallery-preview mb-3">
-                 @foreach(array_slice($photographe['images_gallery'], 0, 4) as $image)
-    <div class="gallery-item">
-        <img src="{{ asset('images/photographes/' . $image) }}" alt="Photo {{ $loop->iteration }}">
-    </div>
-@endforeach
-
+                    @if(isset($photographe['images_gallery']) && count($photographe['images_gallery']) > 0)
+                        @foreach(array_slice($photographe['images_gallery'], 0, 4) as $image)
+                            <div class="gallery-item">
+                                <img src="{{ asset('images/photographes/' . $image) }}" 
+                                     alt="Photo {{ $loop->iteration }}"
+                                     onerror="this.src='{{ asset('images/default-photographe.jpg') }}'">
+                            </div>
+                        @endforeach
+                    @else
+                        @for($i = 0; $i < 4; $i++)
+                            <div class="gallery-item">
+                                <img src="{{ asset('images/default-photographe.jpg') }}" alt="Image par défaut">
+                            </div>
+                        @endfor
+                    @endif
                 </div>
                 <ul class="services-list">
                     @foreach($photographe['services'] as $service)
@@ -123,9 +134,10 @@
 
 .photographes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
     margin-top: 2rem;
+    justify-content: center;
 }
 
 .photographe-card {
@@ -134,6 +146,9 @@
     overflow: hidden;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .photographe-card:hover {
@@ -143,12 +158,14 @@
 .photographe-image {
     position: relative;
     height: 250px;
+    background-color: #f8f9fa;
 }
 
 .photographe-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background-color: #f8f9fa;
 }
 
 .photographe-badge {
@@ -160,10 +177,26 @@
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-weight: 600;
+    z-index: 1;
 }
 
 .photographe-details {
     padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.photographe-details h3 {
+    margin-bottom: 0.5rem;
+    color: #2d3436;
+    font-size: 1.4rem;
+}
+
+.specialite {
+    color: #636e72;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
 }
 
 .gallery-preview {
@@ -177,6 +210,7 @@
     aspect-ratio: 1;
     border-radius: 0.5rem;
     overflow: hidden;
+    background-color: #f8f9fa;
 }
 
 .gallery-item img {
@@ -184,6 +218,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    background-color: #f8f9fa;
 }
 
 .gallery-item:hover img {
@@ -194,20 +229,27 @@
     list-style: none;
     padding: 0;
     margin: 1rem 0;
+    flex-grow: 1;
 }
 
 .services-list li {
     margin-bottom: 0.5rem;
     color: #2d3436;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
 }
 
 .services-list li i {
     color: #c8b53e;
+    margin-right: 0.5rem;
 }
 
 .rating {
     color: #c8b53e;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .rating-count {
@@ -219,11 +261,13 @@
 .price-range {
     color: #2d3436;
     font-weight: 500;
+    margin-top: auto;
 }
 
 .btn-primary {
     background-color: #c8b53e;
     border: none;
+    padding: 0.75rem;
 }
 
 .btn-primary:hover {
@@ -233,11 +277,23 @@
 .btn-outline-primary {
     border-color: #c8b53e;
     color: #c8b53e;
+    padding: 0.75rem;
 }
 
 .btn-outline-primary:hover {
     background-color: #c8b53e;
     color: white;
+}
+
+.d-grid {
+    margin-top: auto;
+}
+
+@media (max-width: 1200px) {
+    .photographes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -251,6 +307,7 @@
 
     .photographes-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .gallery-preview {

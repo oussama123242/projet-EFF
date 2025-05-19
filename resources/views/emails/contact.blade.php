@@ -31,6 +31,9 @@
             font-weight: bold;
             color: #666;
         }
+        .message-content {
+            white-space: pre-line;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +54,7 @@
             
             <div class="field">
                 <p class="label">Message:</p>
-                <p>{{ $message }}</p>
+                <div class="message-content">{{ $messageContent }}</div>
             </div>
         </div>
     </div>

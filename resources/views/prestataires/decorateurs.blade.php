@@ -7,7 +7,7 @@
     <!-- Hero Section -->
     <div class="hero-section text-center mb-5">
         <h1 class="display-4 fw-bold" style="color: #2d3436;text-align: center;">Nos Décorateurs</h1>
-        <p class="lead" style="color: #2d3436;text-align: center;">Des professionnels de la décoration pour sublimer votre événement</p>
+        <p class="lead" style="color: #2d3436;text-align: center;">Transformez votre événement avec nos décorateurs professionnels</p>
     </div>
 
     <!-- Filtres -->
@@ -20,19 +20,19 @@
                             <div class="col-md-4">
                                 <select name="style" class="form-select">
                                     <option value="">Style de décoration</option>
-                                    <option value="moderne">Moderne</option>
-                                    <option value="traditionnel">Traditionnel</option>
-                                    <option value="boheme">Bohème</option>
-                                    <option value="luxe">Luxe</option>
+                                    <option value="moderne" {{ request('style') == 'moderne' ? 'selected' : '' }}>Moderne</option>
+                                    <option value="traditionnel" {{ request('style') == 'traditionnel' ? 'selected' : '' }}>Traditionnel</option>
+                                    <option value="luxe" {{ request('style') == 'luxe' ? 'selected' : '' }}>Luxe</option>
+                                    <option value="mixte" {{ request('style') == 'mixte' ? 'selected' : '' }}>Mixte</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <select name="budget" class="form-select">
                                     <option value="">Budget</option>
-                                    <option value="economique">5000-10000 MAD</option>
-                                    <option value="standard">10000-20000 MAD</option>
-                                    <option value="premium">20000-35000 MAD</option>
-                                    <option value="luxe">35000+ MAD</option>
+                                    <option value="economique" {{ request('budget') == 'economique' ? 'selected' : '' }}>8 000 - 10 000 MAD</option>
+                                    <option value="standard" {{ request('budget') == 'standard' ? 'selected' : '' }}>10 000 - 15 000 MAD</option>
+                                    <option value="premium" {{ request('budget') == 'premium' ? 'selected' : '' }}>15 000 - 20 000 MAD</option>
+                                    <option value="luxe" {{ request('budget') == 'luxe' ? 'selected' : '' }}>20 000+ MAD</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -49,103 +49,70 @@
 
     <!-- Liste des Décorateurs -->
     <div class="decorateurs-grid">
-        <!-- Décorateur 1 -->
+        @forelse($decorateurs as $decorateur)
         <div class="decorateur-card">
             <div class="decorateur-image">
-                <img src="{{ asset('images/decorateurs/elegance-events.jpg') }}" alt="Élégance Events">
-                <div class="decorateur-badge">Premium</div>
+                <img src="{{ asset('images/decorateurs/' . ($decorateur['images_gallery'][0] ?? 'default-decorateur.jpg')) }}" 
+                     alt="{{ $decorateur['nom'] }}"
+                     onerror="this.src='{{ asset('images/default-decorateur.jpg') }}'">
+                <div class="decorateur-badge">{{ $decorateur['badge'] }}</div>
             </div>
             <div class="decorateur-details">
-                <h3>Élégance Events</h3>
-                <p class="specialite">Décoration Moderne & Luxueuse</p>
+                <h3>{{ $decorateur['nom'] }}</h3>
+                <p class="specialite">{{ $decorateur['description'] }}</p>
                 <div class="rating mb-3">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <span class="rating-count">(85 avis)</span>
+                    @for($i = 1; $i <= 5; $i++)
+                        @if($i <= floor($decorateur['rating']))
+                            <i class="fas fa-star"></i>
+                        @elseif($i - 0.5 <= $decorateur['rating'])
+                            <i class="fas fa-star-half-alt"></i>
+                        @else
+                            <i class="far fa-star"></i>
+                        @endif
+                    @endfor
+                    <span class="rating-count">({{ $decorateur['nombre_avis'] }} avis)</span>
+                </div>
+                <div class="gallery-preview mb-3">
+                    @if(isset($decorateur['images_gallery']) && count($decorateur['images_gallery']) > 0)
+                        @foreach(array_slice($decorateur['images_gallery'], 0, 4) as $image)
+                            <div class="gallery-item">
+                                <img src="{{ asset('images/decorateurs/' . $image) }}" 
+                                     alt="Photo {{ $loop->iteration }}"
+                                     onerror="this.src='{{ asset('images/default-decorateur.jpg') }}'">
+                            </div>
+                        @endforeach
+                    @else
+                        @for($i = 0; $i < 4; $i++)
+                            <div class="gallery-item">
+                                <img src="{{ asset('images/default-decorateur.jpg') }}" alt="Image par défaut">
+                            </div>
+                        @endfor
+                    @endif
                 </div>
                 <ul class="services-list">
-                    <li><i class="fas fa-check me-2"></i>Décoration complète</li>
-                    <li><i class="fas fa-check me-2"></i>Éclairage ambiant</li>
-                    <li><i class="fas fa-check me-2"></i>Arrangements floraux</li>
-                    <li><i class="fas fa-check me-2"></i>Mobilier design</li>
+                    @foreach($decorateur['services'] as $service)
+                    <li><i class="fas fa-check me-2"></i>{{ $service }}</li>
+                    @endforeach
                 </ul>
-                <div class="portfolio-preview">
-                    <div class="small-image">
-                        <img src="{{ asset('images/decorateurs/elegance1.jpg') }}" alt="Réalisation 1">
-                    </div>
-                    <div class="small-image">
-                        <img src="{{ asset('images/decorateurs/elegance2.jpg') }}" alt="Réalisation 2">
-                    </div>
-                    <div class="small-image">
-                        <img src="{{ asset('images/decorateurs/elegance3.jpg') }}" alt="Réalisation 3">
-                    </div>
-                </div>
                 <div class="price-range mb-3">
                     <i class="fas fa-tag me-2"></i>
-                    <span>À partir de 25000 MAD</span>
+                    <span>À partir de {{ number_format($decorateur['prix_base'], 0, ',', ' ') }} MAD</span>
                 </div>
                 <div class="d-grid gap-2">
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#portfolioModal1">
-                        <i class="fas fa-images me-2"></i>Voir le portfolio
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#galleryModal{{ $loop->index }}">
+                        <i class="fas fa-images me-2"></i>Voir la galerie
                     </button>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#devisModal1">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#devisModal{{ $loop->index }}">
                         <i class="fas fa-file-invoice me-2"></i>Demander un devis
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- Décorateur 2 -->
-        <div class="decorateur-card">
-            <div class="decorateur-image">
-                <img src="{{ asset('images/decorateurs/artisan-deco.jpg') }}" alt="Artisan Déco">
-                <div class="decorateur-badge">Traditionnel</div>
-            </div>
-            <div class="decorateur-details">
-                <h3>Artisan Déco</h3>
-                <p class="specialite">Décoration Traditionnelle Marocaine</p>
-                <div class="rating mb-3">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                    <span class="rating-count">(73 avis)</span>
-                </div>
-                <ul class="services-list">
-                    <li><i class="fas fa-check me-2"></i>Artisanat marocain</li>
-                    <li><i class="fas fa-check me-2"></i>Tentes traditionnelles</li>
-                    <li><i class="fas fa-check me-2"></i>Salons marocains</li>
-                    <li><i class="fas fa-check me-2"></i>Lanternes artisanales</li>
-                </ul>
-                <div class="portfolio-preview">
-                    <div class="small-image">
-                        <img src="{{ asset('images/decorateurs/artisan1.jpg') }}" alt="Réalisation 1">
-                    </div>
-                    <div class="small-image">
-                        <img src="{{ asset('images/decorateurs/artisan2.jpg') }}" alt="Réalisation 2">
-                    </div>
-                    <div class="small-image">
-                        <img src="{{ asset('images/decorateurs/artisan3.jpg') }}" alt="Réalisation 3">
-                    </div>
-                </div>
-                <div class="price-range mb-3">
-                    <i class="fas fa-tag me-2"></i>
-                    <span>À partir de 15000 MAD</span>
-                </div>
-                <div class="d-grid gap-2">
-                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#portfolioModal2">
-                        <i class="fas fa-images me-2"></i>Voir le portfolio
-                    </button>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#devisModal2">
-                        <i class="fas fa-file-invoice me-2"></i>Demander un devis
-                    </button>
-                </div>
-            </div>
+        @empty
+        <div class="col-12 text-center">
+            <p class="lead">Aucun décorateur ne correspond à vos critères de recherche.</p>
         </div>
+        @endforelse
     </div>
 </div>
 
@@ -167,9 +134,10 @@
 
 .decorateurs-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
     margin-top: 2rem;
+    justify-content: center;
 }
 
 .decorateur-card {
@@ -178,6 +146,9 @@
     overflow: hidden;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .decorateur-card:hover {
@@ -187,12 +158,14 @@
 .decorateur-image {
     position: relative;
     height: 250px;
+    background-color: #f8f9fa;
 }
 
 .decorateur-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    background-color: #f8f9fa;
 }
 
 .decorateur-badge {
@@ -204,33 +177,51 @@
     padding: 0.5rem 1rem;
     border-radius: 2rem;
     font-weight: 600;
+    z-index: 1;
 }
 
 .decorateur-details {
     padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
 
-.portfolio-preview {
-    display: flex;
+.decorateur-details h3 {
+    margin-bottom: 0.5rem;
+    color: #2d3436;
+    font-size: 1.4rem;
+}
+
+.specialite {
+    color: #636e72;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.gallery-preview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 0.5rem;
     margin: 1rem 0;
 }
 
-.small-image {
-    flex: 1;
-    height: 80px;
+.gallery-item {
+    aspect-ratio: 1;
     border-radius: 0.5rem;
     overflow: hidden;
+    background-color: #f8f9fa;
 }
 
-.small-image img {
+.gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    background-color: #f8f9fa;
 }
 
-.small-image:hover img {
+.gallery-item:hover img {
     transform: scale(1.1);
 }
 
@@ -238,20 +229,27 @@
     list-style: none;
     padding: 0;
     margin: 1rem 0;
+    flex-grow: 1;
 }
 
 .services-list li {
     margin-bottom: 0.5rem;
     color: #2d3436;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
 }
 
 .services-list li i {
     color: #c8b53e;
+    margin-right: 0.5rem;
 }
 
 .rating {
     color: #c8b53e;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
 }
 
 .rating-count {
@@ -263,11 +261,13 @@
 .price-range {
     color: #2d3436;
     font-weight: 500;
+    margin-top: auto;
 }
 
 .btn-primary {
     background-color: #c8b53e;
     border: none;
+    padding: 0.75rem;
 }
 
 .btn-primary:hover {
@@ -277,11 +277,23 @@
 .btn-outline-primary {
     border-color: #c8b53e;
     color: #c8b53e;
+    padding: 0.75rem;
 }
 
 .btn-outline-primary:hover {
     background-color: #c8b53e;
     color: white;
+}
+
+.d-grid {
+    margin-top: auto;
+}
+
+@media (max-width: 1200px) {
+    .decorateurs-grid {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -295,6 +307,11 @@
 
     .decorateurs-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .gallery-preview {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 </style>
