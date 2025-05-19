@@ -53,5 +53,55 @@ class ServiceController extends Controller
 
         return view($viewName, compact('salles'));
     }
+
+    public function showByVille($ville)
+    {
+        try {
+            $salles = Salle::where('ville', $ville)->get();
+            
+            if ($salles === null) {
+                $salles = collect([]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error fetching salles by ville: ' . $e->getMessage());
+            $salles = collect([]);
+        }
+
+        return view('services.ville', compact('salles', 'ville'));
+    }
+
+    public function showByCategorie($categorie)
+    {
+        try {
+            $query = Salle::query();
+            
+            // Filtrer selon la catégorie
+            switch ($categorie) {
+                case 'traiteur':
+                    $query->where('has_traiteur', true);
+                    break;
+                case 'decoration':
+                    $query->where('has_decoration', true);
+                    break;
+                case 'photographe':
+                    $query->where('has_photographe', true);
+                    break;
+                case 'animation':
+                    $query->where('has_animation', true);
+                    break;
+            }
+            
+            $salles = $query->get();
+            
+            if ($salles === null) {
+                $salles = collect([]);
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error fetching salles by categorie: ' . $e->getMessage());
+            $salles = collect([]);
+        }
+
+        return view('services.categorie', compact('salles', 'categorie'));
+    }
 }
 

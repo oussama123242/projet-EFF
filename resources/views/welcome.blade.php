@@ -235,6 +235,130 @@
             font-size: 1.1rem;
             margin-top: 10px;
         }
+
+        /* Style pour la section "Ils nous font confiance" */
+        .trust-section {
+            padding: 80px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+
+        .trust-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .trust-description {
+            max-width: 800px;
+            margin: 0 auto 50px;
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .partner-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .partner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .partner-logo {
+            max-width: 150px;
+            height: auto;
+        }
+
+        /* Style pour la section "Pourquoi nous choisir" */
+        .why-us-section {
+            padding: 80px 20px;
+            background: #2c3e50;
+            color: white;
+        }
+
+        .why-us-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            font-weight: 700;
+            color: #c8b53e;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            color: #c8b53e;
+            margin-bottom: 20px;
+        }
+
+        .benefit-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .benefit-description {
+            color: #ecf0f1;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .trust-title, .why-us-title {
+                font-size: 2rem;
+            }
+
+            .trust-description {
+                font-size: 1rem;
+                padding: 0 20px;
+            }
+
+            .partners-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
     </style>
 
     <div id="slider">
@@ -318,6 +442,64 @@
                     <p class="featured-details">👥 Capacité: 150-300 personnes</p>
                     <p class="featured-price">À partir de 10000 DH</p>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section "Ils nous font confiance" -->
+    <section class="trust-section">
+        <h2 class="trust-title">ILS NOUS FONT CONFIANCE</h2>
+        <p class="trust-description">
+            Nous sommes fiers de la confiance que plusieurs agences et annonceurs nous accordent, 
+            en faisant appel à notre expertise pour répondre à leurs besoins en prospection d'espaces événementiels.
+        </p>
+        <div class="partners-grid">
+            <div class="partner-card">
+                <img src="{{ asset('images/partners/partner1.png') }}" alt="Partenaire 1" class="partner-logo">
+            </div>
+            <div class="partner-card">
+                <img src="{{ asset('images/partners/partner2.png') }}" alt="Partenaire 2" class="partner-logo">
+            </div>
+            <div class="partner-card">
+                <img src="{{ asset('images/partners/partner3.png') }}" alt="Partenaire 3" class="partner-logo">
+            </div>
+            <div class="partner-card">
+                <img src="{{ asset('images/partners/partner4.png') }}" alt="Partenaire 4" class="partner-logo">
+            </div>
+        </div>
+    </section>
+
+    <!-- Section "Pourquoi nous choisir" -->
+    <section class="why-us-section">
+        <h2 class="why-us-title">Pourquoi Nous Choisir ?</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <i class="fas fa-search benefit-icon"></i>
+                <h3 class="benefit-title">Large Sélection</h3>
+                <p class="benefit-description">
+                    Accédez à notre vaste catalogue de salles soigneusement sélectionnées pour tous types d'événements.
+                </p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-star benefit-icon"></i>
+                <h3 class="benefit-title">Qualité Garantie</h3>
+                <p class="benefit-description">
+                    Toutes nos salles sont vérifiées et répondent à nos standards élevés de qualité et de service.
+                </p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-handshake benefit-icon"></i>
+                <h3 class="benefit-title">Accompagnement Personnalisé</h3>
+                <p class="benefit-description">
+                    Notre équipe d'experts vous accompagne à chaque étape de votre projet événementiel.
+                </p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-percent benefit-icon"></i>
+                <h3 class="benefit-title">Meilleurs Prix</h3>
+                <p class="benefit-description">
+                    Bénéficiez des meilleurs tarifs négociés avec nos partenaires de confiance.
+                </p>
             </div>
         </div>
     </section>

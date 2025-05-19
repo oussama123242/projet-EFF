@@ -1,10 +1,15 @@
 @extends('layouts.client')
 
-@section('title', 'Vos Réservations')
+@section('title', 'Mes Réservations')
 
 @section('content')
-<div class="container my-5">
-    <h1 class="mb-4">Vos Réservations</h1>
+<div class="container">
+    <div class="reservation-header">
+        <h1>Mes Réservations</h1>
+        <a href="{{ route('reservations.create') }}" class="btn-new">
+            <i class="fas fa-plus"></i> Nouvelle Réservation
+        </a>
+    </div>
 
     @if(session('success'))
         <div class="alert alert-success">
@@ -19,152 +24,224 @@
     @endif
 
     @if($reservations->isEmpty())
-        <div class="alert alert-info">
-            Vous n'avez pas encore de réservations.
+        <div class="empty-message">
+            <p>Vous n'avez pas encore de réservations.</p>
+            <a href="{{ route('reservations.create') }}" class="btn-new">Réserver une salle</a>
         </div>
     @else
-        <div class="row">
+        <div class="reservations-list">
             @foreach($reservations as $reservation)
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">{{ $reservation->salle->nom }}</h5>
-                            <span class="badge {{ $reservation->statut === 'confirmee' ? 'bg-success' : ($reservation->statut === 'en_attente' ? 'bg-warning' : ($reservation->statut === 'annulee' ? 'bg-danger' : 'bg-secondary')) }}">
-                                {{ ucfirst($reservation->statut) }}
-                            </span>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <i class="fas fa-calendar me-2"></i>
-                                {{ $reservation->date->format('d/m/Y') }}
-                            </div>
-                            <div class="mb-3">
-                                <i class="fas fa-clock me-2"></i>
-                                {{ $reservation->heure_debut->format('H:i') }} - {{ $reservation->heure_fin->format('H:i') }}
-                            </div>
-                            <div class="mb-3">
-                                <i class="fas fa-map-marker-alt me-2"></i>
-                                {{ $reservation->salle->ville }} - {{ $reservation->salle->adresse }}
-                            </div>
-                            <div class="mb-3">
-                                <i class="fas fa-money-bill-wave me-2"></i>
-                                {{ number_format($reservation->prix_total, 2, ',', ' ') }} MAD
-                            </div>
-
-                            <div class="d-flex justify-content-between mt-4">
-                                <a href="{{ route('reservations.show', $reservation) }}" class="btn btn-primary">
-                                    <i class="fas fa-eye me-2"></i>Voir détails
-                                </a>
-
-                                @if($reservation->isModifiable())
-                                    <a href="{{ route('reservations.edit', $reservation) }}" class="btn btn-warning">
-                                        <i class="fas fa-edit me-2"></i>Modifier
-                                    </a>
-                                @endif
-
-                                @if($reservation->isCancellable())
-                                    <button type="button" class="btn btn-danger" 
-                                            onclick="confirmCancel('{{ route('reservations.cancel', $reservation) }}')">
-                                        <i class="fas fa-times me-2"></i>Annuler
-                                    </button>
-                                @endif
-
-                                @if($reservation->canLeaveReview())
-                                    <button type="button" class="btn btn-success" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#reviewModal{{ $reservation->id }}">
-                                        <i class="fas fa-star me-2"></i>Avis
-                                    </button>
-                                @endif
+                <div class="reservation-item">
+                    <div class="reservation-main">
+                        <div class="reservation-info">
+                            <h3>{{ $reservation->salle->nom }}</h3>
+                            <div class="details">
+                                <p><i class="fas fa-calendar"></i> {{ $reservation->date->format('d/m/Y') }}</p>
+                                <p><i class="fas fa-clock"></i> {{ $reservation->heure_debut->format('H:i') }} - {{ $reservation->heure_fin->format('H:i') }}</p>
+                                <p><i class="fas fa-map-marker-alt"></i> {{ $reservation->salle->ville }}</p>
+                                <p><i class="fas fa-money-bill"></i> {{ number_format($reservation->prix_total, 2, ',', ' ') }} MAD</p>
                             </div>
                         </div>
+                        <div class="reservation-status">
+                            <span class="status {{ $reservation->statut }}">{{ ucfirst($reservation->statut) }}</span>
+                        </div>
+                    </div>
+                    <div class="reservation-actions">
+                        <a href="{{ route('reservations.show', $reservation) }}" class="btn-view">
+                            <i class="fas fa-eye"></i> Voir détails
+                        </a>
+                        @if($reservation->isModifiable())
+                            <a href="{{ route('reservations.edit', $reservation) }}" class="btn-edit">
+                                <i class="fas fa-edit"></i> Modifier
+                            </a>
+                        @endif
+                        @if($reservation->isCancellable())
+                            <button onclick="confirmCancel('{{ route('reservations.cancel', $reservation) }}')" class="btn-cancel">
+                                <i class="fas fa-times"></i> Annuler
+                            </button>
+                        @endif
                     </div>
                 </div>
-
-                @if($reservation->canLeaveReview())
-                    <div class="modal fade" id="reviewModal{{ $reservation->id }}" tabindex="-1">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">Donner votre avis</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
-                                <form action="{{ route('reservations.review', $reservation) }}" method="POST">
-                                    @csrf
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label class="form-label">Note</label>
-                                            <div class="rating">
-                                                @for($i = 5; $i >= 1; $i--)
-                                                    <input type="radio" name="rating" value="{{ $i }}" id="star{{ $i }}{{ $reservation->id }}">
-                                                    <label for="star{{ $i }}{{ $reservation->id }}">☆</label>
-                                                @endfor
-                                            </div>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Commentaire</label>
-                                            <textarea class="form-control" name="comment" rows="3" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                @endif
             @endforeach
         </div>
     @endif
 </div>
 
 <style>
-.rating {
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.reservation-header {
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
 }
 
-.rating input {
-    display: none;
+.reservation-header h1 {
+    font-size: 24px;
+    color: #333;
 }
 
-.rating label {
-    font-size: 30px;
-    color: #ddd;
-    cursor: pointer;
-    padding: 5px;
+.btn-new {
+    background: #c8b53e;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.rating label:hover,
-.rating label:hover ~ label,
-.rating input:checked ~ label {
+.btn-new:hover {
+    background: #b3a136;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 30px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.reservations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.reservation-item {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.reservation-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.reservation-info h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.details {
+    display: grid;
+    gap: 8px;
+}
+
+.details p {
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.details i {
     color: #c8b53e;
+    width: 20px;
 }
 
-.card {
-    transition: transform 0.2s;
-    border: none;
+.status {
+    padding: 5px 10px;
     border-radius: 15px;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
 }
 
-.card:hover {
-    transform: translateY(-5px);
+.status.confirmee {
+    background: #d4edda;
+    color: #155724;
 }
 
-.card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-    padding: 1rem;
+.status.en_attente {
+    background: #fff3cd;
+    color: #856404;
 }
 
-.badge {
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-    border-radius: 30px;
+.status.annulee {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.reservation-actions {
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.btn-view, .btn-edit, .btn-cancel {
+    padding: 8px 15px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-view {
+    background: #007bff;
+    color: white;
+}
+
+.btn-edit {
+    background: #ffc107;
+    color: #000;
+}
+
+.btn-cancel {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-view:hover, .btn-edit:hover, .btn-cancel:hover {
+    opacity: 0.9;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-danger {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@media (max-width: 768px) {
+    .reservation-main {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .reservation-actions {
+        flex-wrap: wrap;
+    }
+
+    .btn-view, .btn-edit, .btn-cancel {
+        flex: 1;
+        justify-content: center;
+    }
 }
 </style>
 

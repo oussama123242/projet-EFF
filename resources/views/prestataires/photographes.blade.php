@@ -71,11 +71,12 @@
                     <span class="rating-count">({{ $photographe['nombre_avis'] }} avis)</span>
                 </div>
                 <div class="gallery-preview mb-3">
-                    @foreach(array_slice($photographe['images_gallery'], 0, 4) as $image)
-                    <div class="gallery-item">
-                        <img src="{{ asset('images/photographes/' . $image) }}" alt="Photo {{ $loop->iteration }}">
-                    </div>
-                    @endforeach
+                 @foreach(array_slice($photographe['images_gallery'], 0, 4) as $image)
+    <div class="gallery-item">
+        <img src="{{ asset('images/photographes/' . $image) }}" alt="Photo {{ $loop->iteration }}">
+    </div>
+@endforeach
+
                 </div>
                 <ul class="services-list">
                     @foreach($photographe['services'] as $service)
